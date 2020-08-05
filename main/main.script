@@ -1,0 +1,101 @@
+local seed = 42
+local map_width = 64
+local map_height = 32
+local room_min_width = 5
+local room_min_height = 5
+local room_max_width = 10
+local room_max_height = 10
+local room_count = 20
+local complex_rooms = true
+local smooth_rooms = 3
+local grow_rooms = false
+
+
+
+local function generate_room()
+	local s = dungeon.seed()
+    print(s)
+    local map, rooms =
+        dungeon.generate(
+         s,
+        map_width,
+        map_height,
+        room_min_width,
+        room_min_height,
+        room_max_width,
+        room_max_height,
+        room_count,
+        complex_rooms,
+        smooth_rooms,
+        grow_rooms
+    )
+
+    local tile_type = {
+        [0] = 128, -- NOTHING = 0
+        [1] = 104, -- WALL
+        [2] = 25, -- FLOOR
+        [3] = 69, -- DOOR
+        [4] = 56, -- STAIRS_UP
+        [5] = 89, -- STAIRS_DOWN
+        [6] = 66, -- BARRIER / chest
+        [7] = 91 -- CORRIDOR_FLOOR
+    }
+	print(tile_type[1])
+	
+	for y = 1, map_height do
+        local s = ""
+        for x = 1, map_width do
+          
+			tilemap.set_tile("/dungeon#dungeon", "ground", x, y, 128)
+			tilemap.set_tile("/dungeon#dungeon", "walls", x, y, 128)
+			tilemap.set_tile("/dungeon#dungeon", "objects", x, y, 128)
+           
+        end
+	end
+	
+
+    local target = "ground"
+    for y = 1, map_height do
+        local s = ""
+        for x = 1, map_width do
+            --  print("x ", x, "y", y, map[y][x])
+            s = s .. map[y][x]
+            local type = map[y][x]
+
+			tilemap.set_tile("/dungeon#dungeon", "ground", x, y, 25)
+			
+            if type == 0 then
+                target = "ground"
+            elseif type == 1 then
+                target = "walls"
+            elseif type == 6 then
+                target = "objects"
+            else
+                target = "ground"
+            end
+            tilemap.set_tile("/dungeon#dungeon", target, x, y, tile_type[map[y][x]])
+        end
+        print(s)
+        s = ""
+        -- body
+    end
+   
+end
+
+
+
+function init(self)
+    msg.post(".", "acquire_input_focus")
+    --	msg.post("@render:", "use_fixed_fit_projection", {near = -1, far = 1})
+    msg.post("@render:", "use_fixed_projection", {zoom = 2.5, near = -1, far = 1})
+
+    generate_room()
+    pprint(sys.get_application_path())
+end
+
+function on_input(self, action_id, action)
+    if action_id == hash("click") and action.pressed then
+		print("Click!")
+		generate_room()
+    end
+end
