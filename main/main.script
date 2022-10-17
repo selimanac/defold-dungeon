@@ -5,16 +5,16 @@ local room_min_width = 5
 local room_min_height = 5
 local room_max_width = 10
 local room_max_height = 10
-local room_count = 20
-local complex_rooms = true
-local smooth_rooms = 3
+local room_count = 10
+local complex_rooms = false
+local smooth_rooms = 2
 local grow_rooms = false
 
 
 
 local function generate_room()
 	local s = dungeon.seed()
-    print(s)
+  
     local map, rooms =
         dungeon.generate(
          s,
@@ -40,7 +40,7 @@ local function generate_room()
         [6] = 66, -- BARRIER / chest
         [7] = 91 -- CORRIDOR_FLOOR
     }
-	print(tile_type[1])
+
 	
 	for y = 1, map_height do
         local s = ""
@@ -75,7 +75,7 @@ local function generate_room()
             end
             tilemap.set_tile("/dungeon#dungeon", target, x, y, tile_type[map[y][x]])
         end
-        print(s)
+      
         s = ""
         -- body
     end
@@ -90,12 +90,12 @@ function init(self)
     msg.post("@render:", "use_fixed_projection", {zoom = 2.5, near = -1, far = 1})
 
     generate_room()
-    pprint(sys.get_application_path())
+
 end
 
 function on_input(self, action_id, action)
     if action_id == hash("click") and action.pressed then
-		print("Click!")
+		
 		generate_room()
     end
 end

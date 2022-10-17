@@ -6,7 +6,7 @@ DungeonRoom::DungeonRoom(Position position, Position size) : id(genNextId()), po
 
 DungeonRoom::~DungeonRoom()
 {
-    printf("deleted %i\n", id);
+ //   printf("deleted %i\n", id);
 }
 
 u_int32_t DungeonRoom::genNextId()

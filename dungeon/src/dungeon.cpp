@@ -39,7 +39,7 @@ static int Generate(lua_State *L)
     rDungeon.smoothRuns = smooth_rooms;
     rDungeon.growRooms = grow_rooms;
 
-    printf("seed: %u\n", _seed);
+    //printf("seed: %u\n", _seed);
     generator->generate(_seed, rDungeon);
 
     lua_createtable(L, map_height, 0);
